@@ -1,24 +1,52 @@
 ﻿import os
+import sys
 from pathlib import Path
 
 from dotenv import load_dotenv
 from google import genai
+from google.genai import errors
 
 # Load .env from the same directory as this file
-load_dotenv(Path(__file__).parent / ".env")
+load_dotenv(Path(__file__).parent / ".env", override=True)
 api_key = os.getenv("GEMINI_API_KEY")
 
-if not api_key:
-    raise ValueError("GEMINI_API_KEY is missing. Add it to the .env file.")
+if not api_key or "your_" in api_key.lower():
+    print("\n[ERROR] GEMINI_API_KEY is missing or unconfigured.")
+    print("Please open 'week1/.env' and paste your Gemini API key from https://aistudio.google.com/apikey (starts with 'AIzaSy...').\n")
+    sys.exit(1)
 
-client = genai.Client(api_key=api_key)
+if not api_key.startswith("AIza"):
+    print("\n[WARNING] Your GEMINI_API_KEY does not start with 'AIzaSy'.")
+    print("Gemini API keys from Google AI Studio begin with 'AIzaSy...'.")
+    print("Tokens starting with 'AQ.' or OAuth bearer tokens will cause a 401 UNAUTHENTICATED error.\n")
 
-# Using gemini-3.5-flash-lite for fast, reliable response (avoids temporary 503 spikes on 3.7)
-response = client.models.generate_content(
-    model="gemini-3.5-flash-lite",
-    contents="What is Artificial Intelligence? Explain in simple words.",
-)
+try:
+    client = genai.Client(api_key=api_key)
 
-print("===================Week1 =====================")
-print("\nLLM Response:")
-print(response.text)
+    # Using gemini-3.5-flash-lite for fast, reliable response
+    response = client.models.generate_content(
+        model="gemini-3.5-flash-lite",
+        contents="What is Artificial Intelligence? Explain in simple words.",
+    )
+
+    print("=================== Week 1 =====================")
+    print("\nLLM Response:")
+    print(response.text)
+
+except errors.ClientError as e:
+    if "401" in str(e) or "UNAUTHENTICATED" in str(e):
+        print("\n" + "=" * 60)
+        print("[ERROR 401: UNAUTHENTICATED - Invalid API Key]")
+        print("=" * 60)
+        print("Google Generative AI rejected your API key:")
+        print(f"Reason: {e.message if hasattr(e, 'message') else e}")
+        print("\nHow to fix:")
+        print("1. Go to https://aistudio.google.com/apikey")
+        print("2. Click 'Create API key' (free).")
+        print("3. Copy the key (starts with 'AIzaSy...').")
+        print("4. Paste it in 'week1/.env':")
+        print("   GEMINI_API_KEY=AIzaSy...")
+        print("=" * 60 + "\n")
+        sys.exit(1)
+    else:
+        raise
