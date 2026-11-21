@@ -15,7 +15,7 @@
 <p align="center">
   <a href="#-experiments-roadmap">Roadmap</a> •
   <a href="#-weekly-curriculum">Weekly Curriculum</a> •
-  <a href="#-repository-structure">Project Structure</a> •
+  <a href="#-quick-run-cheat-sheet">Quick Run Cheat Sheet</a> •
   <a href="#-quick-start">Quick Start</a> •
   <a href="#-deep-dive-by-week">Deep Dives</a> •
   <a href="#-security--best-practices">Security</a>
@@ -71,12 +71,29 @@ flowchart TD
 
 ---
 
+## ⚡ Quick Run Cheat Sheet
+
+You can run any week directly from the **repository root** using the following one-line commands:
+
+| Week | Run Command (From Repo Root) | Run Tests (if applicable) | Key Requirements |
+| :---: | :--- | :--- | :--- |
+| **Week 1** | `python week1/main.py` | — | Gemini API key in `week1/.env` |
+| **Week 2** | `python week2/main.py` | `pytest week2/test_client.py -v` | Gemini API key in `week2/.env` & Ollama |
+| **Week 3** | `python week3/main.py` | `pytest week3/test_client.py -v` | MongoDB Atlas URI & Gemini key in `week3/.env` |
+| **Week 4** | `python week4/tokenizer_comparison.py` | — | `transformers` & `sentencepiece` |
+| **Week 5** | `python week5/budget.py` | `pytest week5/test_budget.py -v` | Assumptions in `week5/.env` |
+| **Week 6** | `python week6/main.py` | — | Local Ollama running `llama3.2` |
+| **Week 7** | `python week7/main.py` | — | `torch` & `transformers` (GPT-2) |
+
+---
+
 ## 📂 Repository Structure
 
 ```text
 Generative-AI-/
 ├── .gitignore                    # Global git ignore (safeguards .env, .venv, caches)
 ├── README.md                     # Master laboratory documentation (You are here)
+├── requirements.txt              # Unified dependencies across all 7 weeks
 │
 ├── week1/                        # Week 1: Gemini API Foundations
 │   ├── .env.example              # Environment variables template
@@ -148,11 +165,26 @@ python -m venv .venv
 # source .venv/bin/activate
 ```
 
-### 3. Configure Environment Variables
+### 3. Install All Dependencies
+To install all required packages across all 7 weeks in one command:
+```powershell
+pip install -r requirements.txt
+```
+
+### 4. Configure Environment Variables
 Copy `.env.example` templates to `.env` in the required week folders and populate your API credentials:
 ```powershell
-# Example for Week 1
+# Week 1
 Copy-Item week1\.env.example week1\.env
+
+# Week 2
+Copy-Item week2\.env.example week2\.env
+
+# Week 3
+Copy-Item week3\.env.example week3\.env
+
+# Week 5
+Copy-Item week5\.env.example week5\.env
 ```
 > [!NOTE]
 > `.env` files are strictly ignored by `.gitignore` to prevent any secret leakages to version control.
@@ -164,95 +196,133 @@ Copy-Item week1\.env.example week1\.env
 <details>
 <summary><b>Week 1: Getting Started with Google Gemini API</b></summary>
 
-* **Aim:** Setup authenticated environment, configure generation parameters (temperature, max tokens), and stream responses using the Google GenAI SDK.
-* **Run:**
+* **Aim:** Setup authenticated environment, configure generation parameters, and generate text responses using the Google GenAI SDK (`gemini-3.5-flash-lite`).
+* **Run from Root:**
+  ```powershell
+  python week1/main.py
+  ```
+* **Run from Directory:**
   ```powershell
   cd week1
   pip install -r requirements.txt
   python main.py
   ```
+* **Full Guide:** [week1/README.md](week1/README.md)
 </details>
 
 <details>
 <summary><b>Week 2: Provider-Agnostic LLM Client</b></summary>
 
 * **Aim:** Implement a clean architecture using the **Strategy Design Pattern** that decouples application logic from specific model providers (Google Gemini cloud vs. local Ollama / Llama 3.2).
-* **Run:**
+* **Run from Root:**
+  ```powershell
+  python week2/main.py
+  pytest week2/test_client.py -v
+  ```
+* **Run from Directory:**
   ```powershell
   cd week2
   pip install -r requirements.txt
   python main.py
   pytest test_client.py -v
   ```
+* **Full Guide:** [week2/README.md](week2/README.md)
 </details>
 
 <details>
 <summary><b>Week 3: LLM Observability & Telemetry with MongoDB</b></summary>
 
 * **Aim:** Build production observability for GenAI applications. Logs input/output token counts, measured latency in milliseconds, estimated financial cost, and provider metadata into a MongoDB Atlas collection (`llm_monitoring.api_usage`) with exponential backoff and timeout handling.
-* **Run:**
+* **Run from Root:**
+  ```powershell
+  python week3/main.py
+  pytest week3/test_client.py -v
+  ```
+* **Run from Directory:**
   ```powershell
   cd week3
   pip install -r requirements.txt
   python main.py
   pytest test_client.py -v
   ```
+* **Full Guide:** [week3/README.md](week3/README.md)
 </details>
 
 <details>
 <summary><b>Week 4: Tokenizer Lab: BPE vs. WordPiece vs. SentencePiece</b></summary>
 
 * **Aim:** Compare subword segmentation algorithms across English, Telugu, and Hindi. Evaluates tokenizer fertility rate, subword fragmentation, and byte-level handling using GPT-2 (BPE), Multilingual BERT (WordPiece), and XLM-RoBERTa (SentencePiece).
-* **Run:**
+* **Run from Root:**
+  ```powershell
+  python week4/tokenizer_comparison.py
+  ```
+* **Run from Directory:**
   ```powershell
   cd week4
   pip install -r requirements.txt
   python tokenizer_comparison.py
   ```
+* **Full Guide:** [week4/README.md](week4/README.md)
 </details>
 
 <details>
 <summary><b>Week 5: Token Economics & Feature Budgeting</b></summary>
 
 * **Aim:** Implement pre-deployment mathematical budgeting for GenAI features. Calculates daily/monthly spend forecasts, checks RPM/TPM provider limits, and simulates stress safety margins.
-* **Run:**
+* **Run from Root:**
+  ```powershell
+  python week5/budget.py
+  pytest week5/test_budget.py -v
+  ```
+* **Run from Directory:**
   ```powershell
   cd week5
   pip install -r requirements.txt
   python budget.py
   pytest test_budget.py -v
   ```
+* **Full Guide:** [week5/README.md](week5/README.md)
 </details>
 
 <details>
 <summary><b>Week 6: Golden Question Benchmark (Release v0.1)</b></summary>
 
 * **Aim:** Establish an automated evaluation baseline. Tests local `llama3.2` against a curated 30-question dataset spanning Reasoning, Coding, Math, Summarization, Extraction, and Safety, scoring responses based on mandatory keyword presence.
-* **Run:**
+* **Run from Root:**
+  ```powershell
+  python week6/main.py
+  ```
+* **Run from Directory:**
   ```powershell
   cd week6
   pip install -r requirements.txt
   python main.py
   ```
+* **Full Guide:** [week6/README.md](week6/README.md)
 </details>
 
 <details>
 <summary><b>Week 7: Next-Token Probabilities, Logits & Decoding</b></summary>
 
 * **Aim:** Uncover how autoregressive language models predict tokens. Extracts raw logits from `openai-community/gpt2`, applies temperature scaling ($z/T$), performs Softmax normalization, visualizes candidate probability distribution bars, and exports the top-$k$ tokens to CSV.
-* **Run:**
+* **Run from Root:**
+  ```powershell
+  python week7/main.py
+  ```
+* **Run from Directory:**
   ```powershell
   cd week7
   pip install -r requirements.txt
   python main.py
   ```
+* **Full Guide:** [week7/README.md](week7/README.md)
 </details>
 
 ---
 
 ## 🧪 Running Automated Unit Tests
 
-To verify client resilience, fallback strategies, and budget validation across the repository, execute:
+To verify client resilience, fallback strategies, and budget validation across the repository in a single command:
 
 ```powershell
 pytest week2/test_client.py week3/test_client.py week5/test_budget.py -v

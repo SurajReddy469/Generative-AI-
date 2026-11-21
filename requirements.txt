@@ -1,0 +1,17 @@
+# Root requirements for all Generative AI Lab Experiments (Weeks 1 to 7)
+
+# Core LLM APIs & Client
+google-genai>=1.0.0
+python-dotenv>=1.0.0
+requests>=2.31.0
+
+# Database & Observability
+pymongo>=4.6.0
+
+# NLP, Tokenizers & Deep Learning
+torch>=2.0.0
+transformers>=4.40.0
+sentencepiece>=0.2.0
+
+# Testing & Quality Assurance
+pytest>=8.0.0
