@@ -27,6 +27,7 @@ wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+*.zip
 
 # Secrets & Environment Variables - NEVER COMMIT SECRETS
 *.env
